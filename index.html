@@ -4,682 +4,457 @@
   <meta charset="UTF-8">
   <title>Noam Bar-David – Philology, History, and Computational Humanities</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Noam Bar-David – Philology, History, and Computational Humanities. Academic homepage, timeline, media, and publications.">
+  <meta name="description" content="Noam Bar-David – Philology, History, and Computational Humanities.">
   <style>
     :root {
       --bg: #0b0c10;
-      --bg-alt: #11131a;
-      --card-bg: #151822;
       --accent: #2dd4bf;
-      --accent-soft: rgba(45, 212, 191, 0.12);
+      --accent-soft: rgba(45,212,191,0.12);
       --text: #f9fafb;
       --text-muted: #9ca3af;
-      --border-subtle: rgba(148, 163, 184, 0.35);
-      --radius-md: 0.75rem;
-      --radius-full: 999px;
-      --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.55);
-      --font-body: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-                   "Segoe UI", sans-serif;
+      --border: rgba(148,163,184,0.3);
+      --card-bg: linear-gradient(135deg,rgba(15,23,42,0.96),#020617);
+      --radius: 0.75rem;
+      --full: 999px;
+      --shadow: 0 18px 40px rgba(0,0,0,0.55);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+         background:radial-gradient(circle at top left,#1f2937 0,#020617 46%,#020617 100%);
+         color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+    a{color:var(--accent);text-decoration:none}
+    a:hover{text-decoration:underline}
+
+    .shell{max-width:1000px;margin:0 auto;padding:24px 16px 60px}
+
+    /* Header */
+    .site-header{display:flex;align-items:center;gap:20px;margin-bottom:24px;flex-wrap:wrap}
+    .avatar{width:72px;height:72px;border-radius:50%;object-fit:cover;
+            border:2px solid var(--accent);flex-shrink:0}
+    .name-block h1{font-size:clamp(1.5rem,1rem + 1.5vw,2rem);letter-spacing:0.04em;text-transform:uppercase}
+    .name-block p{font-size:0.9rem;color:var(--text-muted);margin-top:3px}
+
+    /* Nav */
+    nav.tabs{display:flex;flex-wrap:wrap;gap:6px;
+             background:rgba(15,23,42,0.85);padding:4px;border-radius:var(--full);
+             border:1px solid var(--border);position:sticky;top:10px;z-index:20;
+             backdrop-filter:blur(16px)}
+    .tab-button{border:none;background:transparent;color:var(--text-muted);
+                padding:8px 16px;font-size:0.88rem;border-radius:var(--full);
+                cursor:pointer;transition:all 150ms ease;white-space:nowrap}
+    .tab-button:hover{background:rgba(15,23,42,0.9);color:var(--text)}
+    .tab-button.active{background:var(--accent-soft);color:var(--accent)}
+
+    main{margin-top:20px}
+    .tab-panel{display:none;animation:fadeIn 220ms ease-out forwards}
+    .tab-panel.active{display:block}
+
+    /* Card */
+    .card{background:var(--card-bg);border-radius:var(--radius);
+          padding:24px 22px;border:1px solid var(--border);box-shadow:var(--shadow)}
+    .card+.card{margin-top:20px}
+    .card h2{font-size:1.2rem;margin-bottom:6px}
+    .card p.lead{color:var(--text-muted);font-size:0.92rem;margin-bottom:14px}
+
+    /* Chips */
+    .chip-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+    .chip{padding:3px 10px;border-radius:var(--full);border:1px solid var(--border);
+          font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em}
+
+    /* Links list */
+    .link-list{list-style:none;margin-top:18px;display:flex;flex-direction:column;gap:8px}
+    .link-item{display:flex;align-items:center;gap:10px;font-size:0.9rem}
+    .link-label{color:var(--text-muted);font-size:0.75rem;text-transform:uppercase;
+                letter-spacing:0.08em;min-width:90px}
+    .pill-link{padding:4px 12px;border-radius:var(--full);border:1px solid var(--border);
+               background:rgba(15,23,42,0.7);transition:all 150ms ease}
+    .pill-link:hover{border-color:var(--accent);background:rgba(15,23,42,1);
+                     transform:translateY(-1px);text-decoration:none}
+
+    /* ── CENTER-AXIS TIMELINE ─────────────────────────── */
+    .tl-wrapper{position:relative;margin-top:20px}
+
+    /* the vertical line */
+    .tl-wrapper::before{
+      content:"";position:absolute;left:50%;top:0;bottom:0;
+      width:2px;background:linear-gradient(to bottom,var(--accent),transparent);
+      opacity:0.45;transform:translateX(-50%)
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    /* column headers */
+    .tl-headers{display:grid;grid-template-columns:1fr 80px 1fr;
+                margin-bottom:12px;text-align:center}
+    .tl-headers .col-left{text-align:right;padding-right:16px;
+                           font-size:1rem;font-weight:600;color:var(--text)}
+    .tl-headers .col-mid{font-size:0.7rem;color:var(--text-muted)}
+    .tl-headers .col-right{text-align:left;padding-left:16px;
+                            font-size:1rem;font-weight:600;color:var(--text)}
+
+    /* each row */
+    .tl-row{display:grid;grid-template-columns:1fr 80px 1fr;
+            margin-bottom:18px;align-items:start;
+            opacity:0;transform:translateY(10px);
+            transition:opacity 280ms ease-out,transform 280ms ease-out}
+    .tl-row.visible{opacity:1;transform:translateY(0)}
+
+    .tl-left{text-align:right;padding-right:20px}
+    .tl-center{display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:4px}
+    .tl-right{text-align:left;padding-left:20px}
+
+    /* year badge */
+    .tl-year{font-size:0.72rem;font-weight:700;color:var(--accent);
+             letter-spacing:0.1em;text-transform:uppercase;white-space:nowrap;
+             background:rgba(45,212,191,0.1);padding:2px 8px;border-radius:var(--full);
+             border:1px solid rgba(45,212,191,0.25)}
+
+    /* dot – sits BELOW the year badge, centred on the line */
+    .tl-dot{width:10px;height:10px;border-radius:50%;background:var(--accent);
+            box-shadow:0 0 0 3px rgba(45,212,191,0.2);flex-shrink:0}
+
+    .tl-title{font-size:0.92rem;font-weight:500;color:var(--text)}
+    .tl-meta{font-size:0.82rem;color:var(--accent);margin-top:2px}
+    .tl-body{font-size:0.82rem;color:var(--text-muted);margin-top:4px}
+
+    /* empty half */
+    .tl-empty{/* intentionally blank */}
+
+    /* mobile: stack */
+    @media(max-width:640px){
+      .tl-wrapper::before{left:12px}
+      .tl-headers{grid-template-columns:1fr}
+      .tl-headers .col-mid,.tl-headers .col-right{display:none}
+      .tl-row{grid-template-columns:24px 1fr}
+      .tl-center{grid-column:1;padding-top:4px}
+      .tl-left,.tl-right{grid-column:2;text-align:left;padding:0 0 0 8px}
+      .tl-right.tl-empty{display:none}
     }
 
-    html, body {
-      height: 100%;
-    }
+    /* Section heading */
+    .section-heading{font-size:1rem;margin-bottom:4px}
+    .section-subtitle{font-size:0.88rem;color:var(--text-muted);margin-bottom:12px}
 
-    body {
-      font-family: var(--font-body);
-      background: radial-gradient(circle at top left, #1f2937 0, #020617 46%, #020617 100%);
-      color: var(--text);
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-    }
+    /* Item list */
+    .item-list{list-style:none;font-size:0.88rem}
+    .item-list li+li{margin-top:12px}
+    .item-year{font-size:0.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.08em}
+    .item-title{font-weight:500;margin-top:2px}
+    .item-meta{color:var(--text-muted);font-size:0.82rem;margin-top:2px}
 
-    a {
-      color: var(--accent);
-      text-decoration: none;
-    }
+    footer{margin-top:32px;font-size:0.78rem;color:var(--text-muted);text-align:center}
 
-    a:hover {
-      text-decoration: underline;
-    }
-
-    .page-shell {
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 24px 16px 48px;
-    }
-
-    header.site-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    .name-block h1 {
-      font-size: clamp(1.6rem, 1.1rem + 1vw, 2rem);
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-
-    .name-block p {
-      font-size: 0.95rem;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-
-    nav.tabs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      background: rgba(15, 23, 42, 0.8);
-      padding: 4px;
-      border-radius: var(--radius-full);
-      border: 1px solid rgba(148, 163, 184, 0.35);
-      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.8);
-      position: sticky;
-      top: 12px;
-      z-index: 20;
-      backdrop-filter: blur(16px);
-    }
-
-    .tab-button {
-      border: none;
-      background: transparent;
-      color: var(--text-muted);
-      padding: 8px 16px;
-      font-size: 0.9rem;
-      border-radius: var(--radius-full);
-      cursor: pointer;
-      transition: background 160ms ease, color 160ms ease, transform 140ms ease;
-      white-space: nowrap;
-    }
-
-    .tab-button:hover {
-      background: rgba(15, 23, 42, 0.85);
-      color: var(--text);
-      transform: translateY(-1px);
-    }
-
-    .tab-button.active {
-      background: var(--accent-soft);
-      color: var(--accent);
-    }
-
-    main {
-      margin-top: 20px;
-    }
-
-    .tab-panel {
-      display: none;
-      animation: fadeIn 220ms ease-out forwards;
-    }
-
-    .tab-panel.active {
-      display: block;
-    }
-
-    .card {
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), #020617);
-      border-radius: var(--radius-md);
-      padding: 24px 20px;
-      border: 1px solid var(--border-subtle);
-      box-shadow: var(--shadow-soft);
-    }
-
-    .card + .card {
-      margin-top: 20px;
-    }
-
-    .card h2 {
-      font-size: 1.15rem;
-      margin-bottom: 6px;
-    }
-
-    .card p.lead {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      margin-bottom: 12px;
-    }
-
-    .chip-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .chip {
-      padding: 4px 10px;
-      border-radius: var(--radius-full);
-      border: 1px solid rgba(148, 163, 184, 0.35);
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .link-list {
-      list-style: none;
-      padding-left: 0;
-      margin-top: 8px;
-    }
-
-    .link-list li + li {
-      margin-top: 6px;
-    }
-
-    .link-item {
-      display: inline-flex;
-      align-items: baseline;
-      gap: 6px;
-      font-size: 0.92rem;
-    }
-
-    .link-label {
-      color: var(--text-muted);
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .pill-link {
-      padding: 4px 10px;
-      border-radius: var(--radius-full);
-      border: 1px solid transparent;
-      background: rgba(15, 23, 42, 0.85);
-      transition: border 150ms ease, background 150ms ease, transform 120ms ease;
-    }
-
-    .pill-link:hover {
-      border-color: var(--accent);
-      background: rgba(15, 23, 42, 1);
-      transform: translateY(-1px);
-    }
-
-    /* Timeline */
-
-    .timeline-wrapper {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr);
-      gap: 20px;
-    }
-
-    @media (min-width: 880px) {
-      .timeline-wrapper {
-        grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.05fr);
-      }
-    }
-
-    .timeline-column h3 {
-      font-size: 1.05rem;
-      margin-bottom: 4px;
-    }
-
-    .timeline-column p {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-      margin-bottom: 12px;
-    }
-
-    .timeline {
-      position: relative;
-      padding-left: 18px;
-      margin-top: 10px;
-    }
-
-    .timeline::before {
-      content: "";
-      position: absolute;
-      left: 4px;
-      top: 4px;
-      bottom: 4px;
-      width: 2px;
-      background: linear-gradient(to bottom, var(--accent), transparent);
-      opacity: 0.55;
-    }
-
-    .timeline-entry {
-      position: relative;
-      margin-bottom: 16px;
-      opacity: 0;
-      transform: translateY(10px);
-      transition: opacity 260ms ease-out, transform 260ms ease-out;
-    }
-
-    .timeline-entry.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .timeline-entry::before {
-      content: "";
-      position: absolute;
-      left: -4px;
-      top: 4px;
-      width: 10px;
-      height: 10px;
-      border-radius: 999px;
-      background: var(--accent);
-      box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.22);
-    }
-
-    .timeline-year {
-      font-size: 0.8rem;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-    }
-
-    .timeline-title {
-      font-size: 0.94rem;
-      margin-top: 2px;
-    }
-
-    .timeline-meta {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    .timeline-body {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-
-    /* Sections for media / publications */
-
-    .section-heading {
-      font-size: 1.05rem;
-      margin-bottom: 4px;
-    }
-
-    .section-subtitle {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      margin-bottom: 12px;
-    }
-
-    .item-list {
-      list-style: none;
-      padding-left: 0;
-      font-size: 0.9rem;
-    }
-
-    .item-list li + li {
-      margin-top: 10px;
-    }
-
-    .item-year {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      color: var(--accent);
-      letter-spacing: 0.08em;
-    }
-
-    .item-title {
-      font-weight: 500;
-    }
-
-    footer {
-      margin-top: 28px;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      text-align: center;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
   </style>
 </head>
 <body>
-<div class="page-shell">
+<div class="shell">
+
+  <!-- HEADER -->
   <header class="site-header">
+    <img class="avatar" src="photo.jpg" alt="Noam Bar-David"
+         onerror="this.style.display='none'">
     <div class="name-block">
-      <h1>Noam&nbsp;Bar‑David</h1>
-      <p>Philology, History, and Computational Humanities</p>
+      <h1>Noam Bar&#8209;David</h1>
+      <p>Philology &middot; History &middot; Computational Humanities &middot; Bar-Ilan University</p>
     </div>
   </header>
 
+  <!-- NAV -->
   <nav class="tabs" aria-label="Main sections">
     <button class="tab-button active" data-tab="home">Home</button>
     <button class="tab-button" data-tab="about">About</button>
-    <button class="tab-button" data-tab="media">Media &amp; Public Outreach</button>
-    <button class="tab-button" data-tab="publications">Academic Publications</button>
+    <button class="tab-button" data-tab="media">Media &amp; Outreach</button>
+    <button class="tab-button" data-tab="publications">Publications</button>
   </nav>
 
   <main>
+
     <!-- HOME -->
-    <section id="tab-home" class="tab-panel active" aria-labelledby="Home">
+    <section id="tab-home" class="tab-panel active">
       <article class="card">
-        <h2>Noam Bar‑David: Philology, History, and Computational Humanities</h2>
+        <h2>Welcome</h2>
         <p class="lead">
-          Doctoral researcher in Land of Israel Studies and Archaeology at Bar‑Ilan University,
-          working on imperial and regional aspects of Koine Greek in Late Antiquity through
-          computational text analysis.
+          Doctoral researcher at Bar-Ilan University working on imperial and regional aspects
+          of Koine Greek in Late Antique Palestine using computational text analysis.
+          Junior member of the RIAB Minerva Center (Bar-Ilan / Leipzig) and researcher
+          at the E-lijah Lab for Digital Humanities, University of Haifa.
         </p>
-
         <div class="chip-row">
-          <span class="chip">Greek epigraphy</span>
-          <span class="chip">Digital &amp; computational humanities</span>
+          <span class="chip">Greek Epigraphy</span>
+          <span class="chip">Computational Humanities</span>
           <span class="chip">Late Antique Palestine</span>
+          <span class="chip">Stylometry</span>
+          <span class="chip">NLP &amp; Ancient Greek</span>
         </div>
-
-        <ul class="link-list" style="margin-top:18px;">
+        <ul class="link-list">
           <li class="link-item">
             <span class="link-label">GitHub</span>
-            <a class="pill-link" href="#" target="_blank" rel="noopener noreferrer">
-              github.com/NbdRes
-            </a>
-          </li>
-          <li class="link-item">
-            <span class="link-label">Project wiki</span>
-            <a class="pill-link" href="#" target="_blank" rel="noopener noreferrer">
-              Collaborative project wiki
-            </a>
+            <a class="pill-link" href="https://github.com/NbdRes" target="_blank" rel="noopener">github.com/NbdRes</a>
           </li>
           <li class="link-item">
             <span class="link-label">LinkedIn</span>
-            <a class="pill-link" href="#" target="_blank" rel="noopener noreferrer">
-              LinkedIn profile
-            </a>
+            <a class="pill-link" href="https://www.linkedin.com/in/noam-bar-david-b24a40135" target="_blank" rel="noopener">linkedin.com/in/noam-bar-david</a>
           </li>
           <li class="link-item">
             <span class="link-label">Minerva Center</span>
-            <a class="pill-link" href="#" target="_blank" rel="noopener noreferrer">
-              Minerva Humanities Center profile
-            </a>
+            <a class="pill-link" href="#" target="_blank" rel="noopener">RIAB Minerva Center profile</a>
+          </li>
+          <li class="link-item">
+            <span class="link-label">Project Wiki</span>
+            <a class="pill-link" href="#" target="_blank" rel="noopener">Collaborative project wiki</a>
           </li>
           <li class="link-item">
             <span class="link-label">Email</span>
-            <a class="pill-link" href="mailto:noambd94@gmail.com">
-              noambd94@gmail.com
-            </a>
+            <a class="pill-link" href="mailto:noambd94@gmail.com">noambd94@gmail.com</a>
           </li>
         </ul>
       </article>
     </section>
 
-    <!-- ABOUT / TIMELINE -->
-    <section id="tab-about" class="tab-panel" aria-labelledby="About">
+    <!-- ABOUT – CENTER TIMELINE -->
+    <section id="tab-about" class="tab-panel">
       <article class="card">
         <h2>About</h2>
-        <p class="lead">
-          A brief timeline of my academic training and professional work in archaeology,
-          philology, and digital humanities.
-        </p>
+        <p class="lead">Academic training and professional milestones — from 2017 to the present.</p>
 
-        <div class="timeline-wrapper" style="margin-top:18px;">
-          <!-- Education column -->
-          <section class="timeline-column">
-            <h3>Education</h3>
-            <p>Formal training in Land of Israel Studies, Archaeology, and Classical Studies.</p>
-            <div class="timeline" aria-label="Education timeline">
-              <div class="timeline-entry" data-year="2023">
-                <div class="timeline-year">2023–present</div>
-                <div class="timeline-title">PhD in Land of Israel Studies and Archaeology</div>
-                <div class="timeline-meta">Bar‑Ilan University</div>
-                <div class="timeline-body">
-                  Dissertation: <em>Imperial and Regional Aspects of Koine Greek Among the
-                  Inhabitants of the Holy Land / Palaestina during Late Antiquity by
-                  Computational Texts Analysis</em>.
-                </div>
-              </div>
+        <div class="tl-wrapper">
 
-              <div class="timeline-entry" data-year="2020">
-                <div class="timeline-year">2020–2023</div>
-                <div class="timeline-title">MA (magna cum laude), Land of Israel Studies and Archaeology</div>
-                <div class="timeline-meta">Bar‑Ilan University</div>
-                <div class="timeline-body">
-                  Thesis: <em>The Palaeography of the Greek Inscriptions and the Cultic Activities
-                  in the Cave of Elijah in Antiquity</em>.
-                </div>
-              </div>
+          <!-- Column labels -->
+          <div class="tl-headers">
+            <div class="col-left">Education</div>
+            <div class="col-mid"></div>
+            <div class="col-right">Career &amp; Projects</div>
+          </div>
 
-              <div class="timeline-entry" data-year="2017">
-                <div class="timeline-year">2017–2020</div>
-                <div class="timeline-title">BA (magna cum laude), Classical Studies and Archaeology</div>
-                <div class="timeline-meta">Bar‑Ilan University</div>
-                <div class="timeline-body">
-                  Combined track in Land of Israel Studies and Archaeology with Classical Studies,
-                  including certified archaeologist training.
-                </div>
-              </div>
+          <!-- 2023 PhD -->
+          <div class="tl-row">
+            <div class="tl-left">
+              <div class="tl-title">PhD – Land of Israel Studies &amp; Archaeology</div>
+              <div class="tl-meta">Bar-Ilan University</div>
+              <div class="tl-body"><em>Imperial and Regional Aspects of Koine Greek in Late Antique Palestine by Computational Text Analysis</em></div>
             </div>
-          </section>
-
-          <!-- Career / projects column -->
-          <section class="timeline-column">
-            <h3>Career &amp; Projects</h3>
-            <p>Research positions, lab work, and collaborative digital‑humanities projects.</p>
-            <div class="timeline" aria-label="Professional timeline">
-              <div class="timeline-entry" data-year="2024">
-                <div class="timeline-year">2024–present</div>
-                <div class="timeline-title">Assistant Lecturer</div>
-                <div class="timeline-meta">Bar‑Ilan University</div>
-                <div class="timeline-body">
-                  Teaching courses on digital documentation, GIS, and aerial mapping for the
-                  humanities, alongside guest lectures on digital and computational humanities.
-                </div>
-              </div>
-
-              <div class="timeline-entry" data-year="2022">
-                <div class="timeline-year">2022–present</div>
-                <div class="timeline-title">Researcher, E‑lijah Lab for Digital Humanities</div>
-                <div class="timeline-meta">University of Haifa</div>
-                <div class="timeline-body">
-                  Development of NLP and machine‑learning tools for Ancient Greek, and large‑scale
-                  digital processing of ancient texts within ISF‑funded projects.
-                </div>
-              </div>
-
-              <div class="timeline-entry" data-year="2022">
-                <div class="timeline-year">2022–present</div>
-                <div class="timeline-title">Junior member, RIAB Minerva Center</div>
-                <div class="timeline-meta">Bar‑Ilan University &amp; University of Leipzig</div>
-                <div class="timeline-body">
-                  Participation in interdisciplinary research on urbanization, political hierarchy,
-                  and writing practices in the Iron Age Levant and later periods.
-                </div>
-              </div>
-
-              <div class="timeline-entry" data-year="2018">
-                <div class="timeline-year">2018–present</div>
-                <div class="timeline-title">Technology &amp; Documentation Coordinator, Tell es‑Safi/Gath Excavations</div>
-                <div class="timeline-meta">Bar‑Ilan University</div>
-                <div class="timeline-body">
-                  3D documentation of archaeological excavations using LiDAR, multispectral
-                  imaging, photogrammetry, UAV‑based aerial photography, and GIS database
-                  management.
-                </div>
-              </div>
-
-              <div class="timeline-entry" data-year="2020">
-                <div class="timeline-year">2020</div>
-                <div class="timeline-title">Area Supervisor, Tel Abu‑Shusha (Gaba)</div>
-                <div class="timeline-meta">Excavation field school</div>
-                <div class="timeline-body">
-                  Supervision of excavation area, architectural interpretation, and spatial
-                  documentation.
-                </div>
-              </div>
+            <div class="tl-center">
+              <div class="tl-year">2023–now</div>
+              <div class="tl-dot"></div>
             </div>
-          </section>
+            <div class="tl-right">
+              <div class="tl-title">Assistant Lecturer</div>
+              <div class="tl-meta">Bar-Ilan University</div>
+              <div class="tl-body">Digital documentation, GIS, aerial mapping and computational humanities.</div>
+            </div>
+          </div>
+
+          <!-- 2023 Winter school / Visiting -->
+          <div class="tl-row">
+            <div class="tl-left">
+              <div class="tl-title">Winter School in Digital Humanities</div>
+              <div class="tl-meta">Freie Universität Berlin &amp; Hebrew University</div>
+            </div>
+            <div class="tl-center">
+              <div class="tl-year">2023</div>
+              <div class="tl-dot"></div>
+            </div>
+            <div class="tl-right tl-empty"></div>
+          </div>
+
+          <!-- 2022 -->
+          <div class="tl-row">
+            <div class="tl-left">
+              <div class="tl-title">MA (magna cum laude) – Land of Israel Studies &amp; Archaeology</div>
+              <div class="tl-meta">Bar-Ilan University</div>
+              <div class="tl-body"><em>The Palaeography of the Greek Inscriptions and the Cultic Activities in the Cave of Elijah in Antiquity.</em> Grade: 97.</div>
+            </div>
+            <div class="tl-center">
+              <div class="tl-year">2020–2023</div>
+              <div class="tl-dot"></div>
+            </div>
+            <div class="tl-right">
+              <div class="tl-title">Researcher, E-lijah Lab for Digital Humanities</div>
+              <div class="tl-meta">University of Haifa (ISF-funded)</div>
+              <div class="tl-body">NLP &amp; machine-learning tools for Ancient Greek; large-scale digital text processing.</div>
+            </div>
+          </div>
+
+          <!-- 2022 Minerva -->
+          <div class="tl-row">
+            <div class="tl-left tl-empty"></div>
+            <div class="tl-center">
+              <div class="tl-year">2022–now</div>
+              <div class="tl-dot"></div>
+            </div>
+            <div class="tl-right">
+              <div class="tl-title">Junior Member, RIAB Minerva Center</div>
+              <div class="tl-meta">Bar-Ilan University &amp; University of Leipzig</div>
+              <div class="tl-body">Interdisciplinary research on Iron Age Levant urbanization, epigraphy, and political hierarchy.</div>
+            </div>
+          </div>
+
+          <!-- 2018 Tell es-Safi -->
+          <div class="tl-row">
+            <div class="tl-left tl-empty"></div>
+            <div class="tl-center">
+              <div class="tl-year">2018–now</div>
+              <div class="tl-dot"></div>
+            </div>
+            <div class="tl-right">
+              <div class="tl-title">Technology &amp; Documentation Coordinator</div>
+              <div class="tl-meta">Tell es-Safi/Gath Excavations, Bar-Ilan University</div>
+              <div class="tl-body">LiDAR, multispectral imaging, photogrammetry, UAV, and GIS database management.</div>
+            </div>
+          </div>
+
+          <!-- BA -->
+          <div class="tl-row">
+            <div class="tl-left">
+              <div class="tl-title">BA (magna cum laude) – Classical Studies &amp; Archaeology</div>
+              <div class="tl-meta">Bar-Ilan University</div>
+              <div class="tl-body">Combined track in Land of Israel Studies, Archaeology, and Classical Studies; certified archaeologist licence.</div>
+            </div>
+            <div class="tl-center">
+              <div class="tl-year">2017–2020</div>
+              <div class="tl-dot"></div>
+            </div>
+            <div class="tl-right">
+              <div class="tl-title">Field Archaeologist &amp; Area Supervisor</div>
+              <div class="tl-meta">Tel Abu-Shusha (Gaba) &amp; Tell Shimron</div>
+              <div class="tl-body">Excavation area supervision, 3D modelling, orthophotos, and spatial documentation.</div>
+            </div>
+          </div>
+
+        </div><!-- /tl-wrapper -->
+
+        <!-- Awards -->
+        <div style="margin-top:28px">
+          <h3 class="section-heading">Scholarships &amp; Awards</h3>
+          <ul class="item-list" style="margin-top:8px">
+            <li><span class="item-year">2024–2027</span><div class="item-title">Rotenstreich Scholarship for Outstanding Doctoral Students</div></li>
+            <li><span class="item-year">2023–2027</span><div class="item-title">President of Bar-Ilan University Scholarship</div></li>
+            <li><span class="item-year">2026</span><div class="item-title">Dean of the School of Advanced Studies' Excellence Award for Academic Publications</div></li>
+            <li><span class="item-year">2023</span><div class="item-title">Research Excellence Award – Jeselsohn Epigraphic Center for Jewish History</div></li>
+            <li><span class="item-year">2023</span><div class="item-title">Research Excellence Award – Prof. Amos Kloner (z"l) Prize</div></li>
+            <li><span class="item-year">2022</span><div class="item-title">Beit HaTanach Scholarship for Research Excellence</div></li>
+            <li><span class="item-year">2021</span><div class="item-title">Kussitzky Family Excellence Scholarship</div></li>
+          </ul>
         </div>
+
       </article>
     </section>
 
-    <!-- MEDIA & POPULAR WRITING -->
-    <section id="tab-media" class="tab-panel" aria-labelledby="Media">
+    <!-- MEDIA -->
+    <section id="tab-media" class="tab-panel">
       <article class="card">
         <h2>Media &amp; Public Outreach</h2>
-        <p class="lead">
-          Selected interviews, podcasts, and popular articles presenting my research to wider
-          audiences.
-        </p>
+        <p class="lead">Interviews, podcasts, and popular writing presenting research to wider audiences.</p>
 
-        <section style="margin-top:18px;">
-          <h3 class="section-heading">Selected appearances</h3>
-          <p class="section-subtitle">
-            We will add concrete links (podcasts, TV, radio, blogs) here.
-          </p>
-          <ul class="item-list">
-            <li>
-              <div class="item-year">2024</div>
-              <div class="item-title">
-                Interview on computational approaches to ancient Greek inscriptions
-              </div>
-              <div class="timeline-meta">
-                <em>[Outlet / programme name – link to be added]</em>
-              </div>
-            </li>
-            <li>
-              <div class="item-year">2023</div>
-              <div class="item-title">
-                Public talk: Archaeology, text, and digital tools in Elijah's Cave, Haifa
-              </div>
-              <div class="timeline-meta">
-                <em>[Venue or series – link to be added]</em>
-              </div>
-            </li>
-          </ul>
-        </section>
+        <h3 class="section-heading">Selected appearances</h3>
+        <p class="section-subtitle">Links to be added.</p>
+        <ul class="item-list">
+          <li>
+            <span class="item-year">2026</span>
+            <div class="item-title">Seminar lecture at the Sorbonne (with Dr. Stephanie Binder)</div>
+            <div class="item-meta"><em>Digital tools, Flavius Josephus and Nicolaus of Damascus</em> — Séminaire de recherche sur le judaïsme et le christianisme dans l'Antiquité</div>
+          </li>
+          <li>
+            <span class="item-year">2024</span>
+            <div class="item-title">Digital Ancient Near Eastern Studies (DANES) Conference</div>
+            <div class="item-meta"><em>Tracing Translation's Footprints: A Stylometric Analysis of Ancient Greek and Coptic Texts</em></div>
+          </li>
+          <li>
+            <span class="item-year">2024</span>
+            <div class="item-title">The Bible and Its World – International Academic Conference, Israel</div>
+            <div class="item-meta"><em>Translation features in the Book of Revelation from a stylometric perspective</em></div>
+          </li>
+        </ul>
 
-        <section style="margin-top:22px;">
-          <h3 class="section-heading">Popular writing</h3>
-          <p class="section-subtitle">
-            Short essays and op‑eds on archaeology, history, and digital humanities.
-          </p>
-          <ul class="item-list">
-            <li>
-              <div class="item-year">20XX</div>
-              <div class="item-title">
-                Title of a popular article on Late Antique Palestine
-              </div>
-              <div class="timeline-meta">
-                <em>[Publication name – link to be added]</em>
-              </div>
-            </li>
-          </ul>
-        </section>
+        <h3 class="section-heading" style="margin-top:24px">Popular writing &amp; press</h3>
+        <p class="section-subtitle">To be updated with links.</p>
+        <ul class="item-list">
+          <li>
+            <span class="item-year">TBA</span>
+            <div class="item-title">Popular articles and media appearances to be listed here.</div>
+          </li>
+        </ul>
       </article>
     </section>
 
-    <!-- ACADEMIC PUBLICATIONS -->
-    <section id="tab-publications" class="tab-panel" aria-labelledby="Academic Publications">
+    <!-- PUBLICATIONS -->
+    <section id="tab-publications" class="tab-panel">
       <article class="card">
         <h2>Academic Publications</h2>
-        <p class="lead">
-          A selection of peer‑reviewed articles and works in progress. Full list and PDFs will be
-          added as links.
-        </p>
+        <p class="lead">Peer-reviewed articles and works in progress. DOIs and PDFs will be linked when available.</p>
 
-        <section style="margin-top:18px;">
-          <h3 class="section-heading">Published</h3>
-          <ul class="item-list">
-            <li>
-              <div class="item-year">2025</div>
-              <div class="item-title">
-                Bar‑David, N. <em>Computational Analysis of the Inscriptions of Maresha:
-                Spatial and Statistical Examination</em>.
-              </div>
-              <div class="timeline-meta">
-                Studies on the Land of Judea 8, pp.&nbsp;9–20. (Hebrew)
-              </div>
-            </li>
-            <li>
-              <div class="item-year">2024</div>
-              <div class="item-title">
-                Tepper, Y., Ecker, A., Bar‑David, N., Tirosh‑Hacohen, J., &amp; Avrahami, M.
-                <em>Haifa, Elijah's Cave: Preliminary Report</em>.
-              </div>
-              <div class="timeline-meta">
-                <em>Hadashot Arkheologiyot</em> 136, Israel Antiquities Authority.
-              </div>
-            </li>
-          </ul>
-        </section>
+        <h3 class="section-heading">Published</h3>
+        <ul class="item-list" style="margin-top:8px">
+          <li>
+            <span class="item-year">2025</span>
+            <div class="item-title">Bar-David, N. <em>Computational Analysis of the Inscriptions of Maresha: Spatial and Statistical Examination</em>.</div>
+            <div class="item-meta">Studies on the Land of Judea 8, pp. 9–20. Jerusalem: Kefar Etzion. (Hebrew)</div>
+          </li>
+          <li>
+            <span class="item-year">2024</span>
+            <div class="item-title">Tepper, Y., Ecker, A., Bar-David, N., Tirosh-Hacohen, J., &amp; Avrahami, M. <em>Haifa, Elijah's Cave: Preliminary Report</em>.</div>
+            <div class="item-meta"><em>Hadashot Arkheologiyot</em> 136. Israel Antiquities Authority.</div>
+          </li>
+        </ul>
 
-        <section style="margin-top:22px;">
-          <h3 class="section-heading">In press</h3>
-          <ul class="item-list">
-            <li>
-              <div class="item-year">in press</div>
-              <div class="item-title">
-                Bar‑David, N. et&nbsp;al. <em>Hokuk, Hokuk North</em>.
-              </div>
-              <div class="timeline-meta">
-                <em>Hadashot Arkheologiyot</em>.
-              </div>
-            </li>
-          </ul>
-        </section>
+        <h3 class="section-heading" style="margin-top:22px">In press</h3>
+        <ul class="item-list" style="margin-top:8px">
+          <li>
+            <span class="item-year">in press</span>
+            <div class="item-title">Bar-David, N., Friedman, M., Asouline, S., Binder, S., Shaler, Y., &amp; Lavi Nicolaus, M. <em>Is that you? Machine-learning tools and Josephus' relationship with his sources</em>.</div>
+            <div class="item-meta"><em>Historia</em> – Journal of the Israeli Historical Society.</div>
+          </li>
+          <li>
+            <span class="item-year">in press</span>
+            <div class="item-title">Elbaz, S., Cassuto, D., Ahituv, H., Guterman, S., Bar-David, N., &amp; Meir, A. <em>Hokuk North</em>.</div>
+            <div class="item-meta"><em>Hadashot Arkheologiyot</em>.</div>
+          </li>
+        </ul>
 
-        <section style="margin-top:22px;">
-          <h3 class="section-heading">Under review / in preparation</h3>
-          <ul class="item-list">
-            <li>
-              <div class="item-year">under review</div>
-              <div class="item-title">
-                Bar‑David, N. et&nbsp;al. <em>Digital tools, Flavius Josephus and Nicolaus
-                of Damascus</em>.
-              </div>
-              <div class="timeline-meta">
-                Details and journal to be added.
-              </div>
-            </li>
-          </ul>
-        </section>
+        <h3 class="section-heading" style="margin-top:22px">Under review</h3>
+        <ul class="item-list" style="margin-top:8px">
+          <li>
+            <span class="item-year">under review</span>
+            <div class="item-title">Privur, G. &amp; Bar-David, N. <em>In the Language of His Forefathers: The New Testament in the Translation of Domenico of Jerusalem</em>.</div>
+            <div class="item-meta"><em>Tarbiz</em>.</div>
+          </li>
+          <li>
+            <span class="item-year">under review</span>
+            <div class="item-title">Elbaz, S., Cassuto, D., Ahituv, H., Guterman, S., Bar-David, N., &amp; Meir, A. <em>Hokuk South</em>.</div>
+            <div class="item-meta"><em>Hadashot Arkheologiyot</em>.</div>
+          </li>
+        </ul>
+
       </article>
     </section>
+
   </main>
 
   <footer>
-    Last updated 2026. This site is a simple static page hosted on GitHub Pages.
+    Last updated April 2026 &bull; Hosted on <a href="https://pages.github.com" target="_blank" rel="noopener">GitHub Pages</a>
   </footer>
 </div>
 
 <script>
   // Tab switching
   const buttons = document.querySelectorAll('.tab-button');
-  const panels = document.querySelectorAll('.tab-panel');
+  const panels  = document.querySelectorAll('.tab-panel');
 
   buttons.forEach(btn => {
     btn.addEventListener('click', () => {
-      const target = btn.dataset.tab;
-
       buttons.forEach(b => b.classList.toggle('active', b === btn));
-      panels.forEach(panel => {
-        panel.classList.toggle('active', panel.id === 'tab-' + target);
-      });
-
-      // Scroll to top of content on mobile
-      const navBottom = document.querySelector('nav.tabs').getBoundingClientRect().bottom + window.scrollY;
-      window.scrollTo({ top: navBottom + 8, behavior: 'smooth' });
+      panels.forEach(p => p.classList.toggle('active', p.id === 'tab-' + btn.dataset.tab));
     });
   });
 
-  // Timeline scroll animation
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
-      }
+  // Scroll-triggered timeline animation
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
     });
-  }, { threshold: 0.15 });
+  }, { threshold: 0.12 });
 
-  document.querySelectorAll('.timeline-entry').forEach(entry => observer.observe(entry));
+  document.querySelectorAll('.tl-row').forEach(r => io.observe(r));
 </script>
 </body>
 </html>
